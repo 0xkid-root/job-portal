@@ -36,7 +36,6 @@ export default function PostJobPage() {
     company: '',
     location: '',
     type: 'c2c',
-    duration: '',
     description: '',
     requirements: '',
     benefits: '',
@@ -48,7 +47,9 @@ export default function PostJobPage() {
     remote: false,
     urgent: false,
     contactEmail: '',
-    contactPhone: ''
+    contactPhone: '',
+    companyWebsite: '',
+    companyTwitter: ''
   });
 
   const [skillInput, setSkillInput] = useState('');
@@ -140,7 +141,7 @@ export default function PostJobPage() {
       
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Post a Job</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Post USA Staffing Jobs quick and easy way !!</h1>
           <p className="text-gray-600">
             Find the perfect C2C consultant for your project
           </p>
@@ -187,6 +188,15 @@ export default function PostJobPage() {
 
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
+                  <Label htmlFor="companyWebsite">Company Website</Label>
+                  <Input
+                    id="companyWebsite"
+                    placeholder="https://company.com"
+                    value={formData.companyWebsite}
+                    onChange={(e) => setFormData(prev => ({ ...prev, companyWebsite: e.target.value }))}
+                  />
+                </div>
+                <div className="space-y-2">
                   <Label htmlFor="location">Location *</Label>
                   <Input
                     id="location"
@@ -196,6 +206,9 @@ export default function PostJobPage() {
                     required
                   />
                 </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="type">Job Type</Label>
                   <Select value={formData.type} onValueChange={(value) => setFormData(prev => ({ ...prev, type: value }))}>
@@ -208,18 +221,6 @@ export default function PostJobPage() {
                       <SelectItem value="full-time">Full-time</SelectItem>
                     </SelectContent>
                   </Select>
-                </div>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="duration">Duration</Label>
-                  <Input
-                    id="duration"
-                    placeholder="e.g. 6 months, 1 year, Long term"
-                    value={formData.duration}
-                    onChange={(e) => setFormData(prev => ({ ...prev, duration: e.target.value }))}
-                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="experience">Experience Level</Label>
@@ -412,6 +413,18 @@ export default function PostJobPage() {
                     placeholder="+1 (555) 123-4567"
                     value={formData.contactPhone}
                     onChange={(e) => setFormData(prev => ({ ...prev, contactPhone: e.target.value }))}
+                  />
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="companyTwitter">Company Twitter Link</Label>
+                  <Input
+                    id="companyTwitter"
+                    placeholder="https://twitter.com/company"
+                    value={formData.companyTwitter}
+                    onChange={(e) => setFormData(prev => ({ ...prev, companyTwitter: e.target.value }))}
                   />
                 </div>
               </div>

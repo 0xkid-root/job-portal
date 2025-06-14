@@ -169,9 +169,7 @@ export default function Home() {
                 <p className="text-gray-600 mb-4">
                   Easily post C2C job opportunities and reach thousands of qualified IT consultants.
                 </p>
-                <Button size="sm" asChild>
-                  <Link href="/post-job">Post Now</Link>
-                </Button>
+
               </CardContent>
             </Card>
             
@@ -186,9 +184,7 @@ export default function Home() {
                 <p className="text-gray-600 mb-4">
                   Share your consultant profiles and make them discoverable to recruiters.
                 </p>
-                <Button size="sm" variant="outline" asChild>
-                  <Link href="/post-hotlist">Add Profile</Link>
-                </Button>
+
               </CardContent>
             </Card>
             
