@@ -82,30 +82,68 @@ export default function PostJobPage() {
     e.preventDefault();
     setError('');
     setIsLoading(true);
-
+  
     // Basic validation
     if (!formData.title || !formData.company || !formData.location || !formData.description) {
       setError('Please fill in all required fields');
       setIsLoading(false);
       return;
     }
-
+  
     if (formData.skills.length === 0) {
       setError('Please add at least one skill requirement');
       setIsLoading(false);
       return;
     }
-
+  
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+      // Format rate data
+      const rate = {
+        min: formData.minRate ? parseInt(formData.minRate) : undefined,
+        max: formData.maxRate ? parseInt(formData.maxRate) : undefined,
+        type: formData.rateType
+      };
+  
+      // Prepare API request body
+      const jobData = {
+        title: formData.title,
+        company: formData.company,
+        location: formData.location,
+        type: formData.type,
+        description: formData.description,
+        skills: formData.skills,
+        experience: formData.experience,
+        requirements: formData.requirements,
+        benefits: formData.benefits,
+        remote: formData.remote,
+        urgent: formData.urgent,
+        contactEmail: formData.contactEmail,
+        rate
+      };
+  
+      const response = await fetch('/api/jobs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(jobData),
+      });
+
+      console.log('API Response:', response);
+  
+      const result = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to post job');
+      }
+  
       setSuccess(true);
       setTimeout(() => {
         router.push('/jobs');
       }, 2000);
+  
     } catch (error) {
-      setError('Failed to post job. Please try again.');
+      setError(error instanceof Error ? error.message : 'Failed to post job. Please try again.');
     } finally {
       setIsLoading(false);
     }

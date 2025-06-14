@@ -54,8 +54,34 @@ export default function PostHotlistPage() {
     }
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const formDataToSend = new FormData();
+      formDataToSend.append('title', formData.title);
+      formDataToSend.append('content', formData.content);
+      formDataToSend.append('recruiterEmail', formData.recruiterEmail);
+      if (formData.screenshot) {
+        formDataToSend.append('screenshot', formData.screenshot);
+      }
+
+      const response = await fetch('/api/hotlist', {
+        method: 'POST',
+        body: JSON.stringify({
+          title: formData.title,
+          content: formData.content,
+          recruiterEmail: formData.recruiterEmail,
+          screenshot: formData.screenshot ? formData.screenshot.name : null
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log('Response is here:', response);
+
+      const data = await response.json();
+      
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to post hotlist');
+      }
 
       setSuccess(true);
       setTimeout(() => {

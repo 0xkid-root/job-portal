@@ -18,13 +18,7 @@ export interface IJob extends Document {
   benefits?: string[];
   remote: boolean;
   urgent: boolean;
-  isPremium: boolean;
-  status: 'active' | 'closed' | 'draft';
-  views: number;
-  postedBy: mongoose.Types.ObjectId;
-  contactEmail?: string;
-  contactPhone?: string;
-  expiresAt: Date;
+  contactEmail: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -47,13 +41,7 @@ const JobSchema = new Schema<IJob>({
   benefits: [String],
   remote: { type: Boolean, default: false },
   urgent: { type: Boolean, default: false },
-  isPremium: { type: Boolean, default: false },
-  status: { type: String, enum: ['active', 'closed', 'draft'], default: 'active' },
-  views: { type: Number, default: 0 },
-  postedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  contactEmail: String,
-  contactPhone: String,
-  expiresAt: { type: Date, required: true }
+  contactEmail: { type: String, required: true }
 }, {
   timestamps: true
 });
