@@ -328,41 +328,39 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
-import ConsultantCard from '@/components/ConsultantCard';
-import SearchFilters from '@/components/SearchFilters';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Users, Search, Filter, Grid, List, ChevronLeft, ChevronRight, Download, MessageCircle } from 'lucide-react';
 
 export default function ConsultantsPage() {
-  
-
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <Navbar />
 
-      <div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              comming soon 
-            </h1>
-
+      <main className="flex-grow flex items-center justify-center px-4 sm:px-6 lg:px-8 py-8">
+        <div className="text-center">
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600 animate-pulse">
+            Coming Soon
+          </h1>
+          <p className="text-lg sm:text-xl text-gray-600 max-w-md mx-auto">
+            We're working hard to bring you something amazing. Stay tuned for updates!
+          </p>
+          <div className="mt-6">
+            <svg
+              className="w-16 h-16 mx-auto text-indigo-500 animate-spin"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
           </div>
-
-
         </div>
-
-      
-      
-
+      </main>
     </div>
-  </div>
   );
 }
