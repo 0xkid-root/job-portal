@@ -54,7 +54,7 @@ export default function Home() {
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Find Your Next{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-400">
-                C2C Opportunity
+              HireSphere IT
               </span>
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-blue-100 max-w-3xl mx-auto">
@@ -377,7 +377,7 @@ export default function Home() {
           </div>
           
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 C2C Jobs Pro. All rights reserved.</p>
+            <p>&copy; 2025 C2C Jobs Pro. All rights reserved.</p>
           </div>
         </div>
       </footer>

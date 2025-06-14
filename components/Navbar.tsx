@@ -10,6 +10,7 @@ import {
   Plus,
   UserPlus
 } from 'lucide-react';
+import Logo from './Logo';
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -20,8 +21,7 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-2">
-              <Briefcase className="h-8 w-8 text-blue-600" />
-              <span className="font-bold text-xl text-gray-900">C2C Jobs Pro</span>
+              <Logo/>
             </Link>
           </div>
 
