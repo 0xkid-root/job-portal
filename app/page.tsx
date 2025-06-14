@@ -90,12 +90,12 @@ export default function Home() {
                   Browse Jobs
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20" asChild>
+              {/* <Button size="lg" variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20" asChild>
                 <Link href="/consultants">
                   <Users className="mr-2 h-5 w-5" />
-                  Find Consultants
+                  Find Consultants (Comming Soon)
                 </Link>
-              </Button>
+              </Button> */}
               <Button size="lg" variant="outline" className="bg-green-600/20 border-green-400/30 text-white hover:bg-green-600/30" asChild>
                 <Link href="/post-job">
                   <Plus className="mr-2 h-5 w-5" />
@@ -359,7 +359,7 @@ export default function Home() {
             <div>
               <h3 className="font-semibold text-lg mb-4">For Employers</h3>
               <ul className="space-y-2 text-gray-400">
-                <li><Link href="/consultants" className="hover:text-white">Find Consultants</Link></li>
+                <li><Link href="/consultants" className="hover:text-white">Find Consultants </Link></li>
                 <li><Link href="/post-job" className="hover:text-white">Post a Job</Link></li>
                 <li><Link href="/hotlist" className="hover:text-white">Browse Hotlist</Link></li>
               </ul>
