@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MessageCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface HotlistCardProps {
   hotlist: {
@@ -18,8 +19,17 @@ interface HotlistCardProps {
 }
 
 export default function HotlistCard({ hotlist, onContact }: HotlistCardProps) {
+  const router = useRouter();
+
+  const handleCardClick = () => {
+    router.push(`/hotlist/${hotlist._id}`);
+  };
+
   return (
-    <Card className="hover:shadow-lg transition-shadow duration-200">
+    <Card 
+      className="hover:shadow-lg transition-shadow duration-200 cursor-pointer" 
+      onClick={handleCardClick}
+    >
       <CardHeader>
         <CardTitle className="text-lg font-semibold">{hotlist.title}</CardTitle>
         <div className="text-sm text-gray-500">
@@ -41,7 +51,10 @@ export default function HotlistCard({ hotlist, onContact }: HotlistCardProps) {
           {onContact && (
             <Button
               size="sm"
-              onClick={() => onContact(hotlist.recruiterEmail)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onContact(hotlist.recruiterEmail);
+              }}
             >
               <MessageCircle className="h-4 w-4 mr-1" />
               Contact
