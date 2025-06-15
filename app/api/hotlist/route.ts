@@ -44,6 +44,7 @@ export async function POST(request: Request) {
       screenshot,
       recruiterEmail,
     });
+    console.log(hotlist,"hotlist")
 
     return NextResponse.json({
       success: true,

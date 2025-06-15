@@ -78,6 +78,7 @@ export default function PostHotlistPage() {
       console.log('Response is here:', response);
 
       const data = await response.json();
+      console.log(data,"data is here");
       
       if (!data.success) {
         throw new Error(data.error || 'Failed to post hotlist');

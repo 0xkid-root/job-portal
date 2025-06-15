@@ -66,9 +66,9 @@ export default function ConsultantCard({
       <CardHeader className="pb-3">
         <div className="flex items-start space-x-4">
           <Avatar className="h-16 w-16">
-            <AvatarImage src={consultant.profilePicture} alt={consultant.firstName} />
+            <AvatarImage src={consultant.profilePicture || ''} alt={consultant.firstName || ''} />
             <AvatarFallback className="text-lg">
-              {consultant.firstName[0]}{consultant.lastName[0]}
+              {(consultant.firstName?.[0] || '') + (consultant.lastName?.[0] || '')}
             </AvatarFallback>
           </Avatar>
           
@@ -120,12 +120,12 @@ export default function ConsultantCard({
         )}
         
         <div className="flex flex-wrap gap-1 mb-4">
-          {consultant.skills.slice(0, 6).map((skill, index) => (
+          {consultant.skills?.slice(0, 6)?.map((skill, index) => (
             <Badge key={index} variant="secondary" className="text-xs">
               {skill}
             </Badge>
           ))}
-          {consultant.skills.length > 6 && (
+          {consultant.skills?.length > 6 && (
             <Badge variant="outline" className="text-xs">
               +{consultant.skills.length - 6} more
             </Badge>

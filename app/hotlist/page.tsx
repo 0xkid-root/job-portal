@@ -3,21 +3,20 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
-import ConsultantCard from '@/components/ConsultantCard';
+import HotlistCard from '@/components/HotlistCard';
 import SearchFilters from '@/components/SearchFilters';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Users, Search, Filter, Grid, List, ChevronLeft, ChevronRight, Download, MessageCircle } from 'lucide-react';
+import { Users, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function HotlistPage() {
   const searchParams = useSearchParams();
-  const [consultants, setConsultants] = useState([]);
+  const [hotlists, setHotlists] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({});
   const [sortBy, setSortBy] = useState('recent');
-  const [viewMode, setViewMode] = useState('grid');
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 12,
@@ -25,100 +24,32 @@ export default function HotlistPage() {
     pages: 0
   });
 
-  // Sample consultant data
-  const sampleConsultants = [
-    {
-      _id: '1',
-      firstName: 'John',
-      lastName: 'Smith',
-      email: 'john.smith@email.com',
-      location: 'New York, NY',
-      skills: ['React', 'Node.js', 'AWS', 'TypeScript', 'MongoDB'],
-      experience: 8,
-      hourlyRate: 95,
-      availability: 'available',
-      bio: 'Senior Full Stack Developer with 8+ years of experience in building scalable web applications. Expertise in React, Node.js, and cloud technologies.',
-      visa: 'H1B'
-    },
-    {
-      _id: '2',
-      firstName: 'Sarah',
-      lastName: 'Johnson',
-      email: 'sarah.j@email.com',
-      location: 'San Francisco, CA',
-      skills: ['Python', 'Django', 'PostgreSQL', 'Docker', 'Kubernetes'],
-      experience: 6,
-      hourlyRate: 85,
-      availability: 'open-to-offers',
-      bio: 'Python Developer specializing in backend systems and DevOps. Strong experience with containerization and microservices architecture.',
-      visa: 'Green Card'
-    },
-    {
-      _id: '3',
-      firstName: 'Michael',
-      lastName: 'Chen',
-      email: 'michael.chen@email.com',
-      location: 'Austin, TX',
-      skills: ['Java', 'Spring Boot', 'Microservices', 'Kafka', 'Redis'],
-      experience: 10,
-      hourlyRate: 110,
-      availability: 'available',
-      bio: 'Senior Java Developer with extensive experience in enterprise applications and distributed systems. Expert in Spring ecosystem and event-driven architecture.',
-      visa: 'US Citizen'
-    },
-    {
-      _id: '4',
-      firstName: 'Emily',
-      lastName: 'Davis',
-      email: 'emily.davis@email.com',
-      location: 'Chicago, IL',
-      skills: ['Angular', 'TypeScript', 'C#', '.NET', 'Azure'],
-      experience: 7,
-      hourlyRate: 90,
-      availability: 'available',
-      bio: 'Full Stack .NET Developer with strong frontend skills in Angular. Experience with Azure cloud services and enterprise application development.',
-      visa: 'L1'
-    },
-    {
-      _id: '5',
-      firstName: 'David',
-      lastName: 'Wilson',
-      email: 'david.wilson@email.com',
-      location: 'Seattle, WA',
-      skills: ['DevOps', 'AWS', 'Terraform', 'Jenkins', 'Python'],
-      experience: 9,
-      hourlyRate: 105,
-      availability: 'open-to-offers',
-      bio: 'DevOps Engineer with 9+ years of experience in cloud infrastructure and automation. Specialized in AWS, Infrastructure as Code, and CI/CD pipelines.',
-      visa: 'H1B'
-    },
-    {
-      _id: '6',
-      firstName: 'Lisa',
-      lastName: 'Anderson',
-      email: 'lisa.anderson@email.com',
-      location: 'Boston, MA',
-      skills: ['React', 'Vue.js', 'JavaScript', 'GraphQL', 'Node.js'],
-      experience: 5,
-      hourlyRate: 80,
-      availability: 'available',
-      bio: 'Frontend Developer with expertise in modern JavaScript frameworks. Strong experience in building responsive and interactive user interfaces.',
-      visa: 'F1 OPT'
-    }
-  ];
-
   useEffect(() => {
-    // Simulate loading
-    setLoading(true);
-    setTimeout(() => {
-      setConsultants(sampleConsultants);
-      setPagination(prev => ({
-        ...prev,
-        total: sampleConsultants.length,
-        pages: Math.ceil(sampleConsultants.length / prev.limit)
-      }));
-      setLoading(false);
-    }, 1000);
+    const fetchHotlists = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/hotlist');
+        const data = await response.json();
+        console.log(data,"data i shere whjy ypu are fear");
+        
+        if (data.success) {
+          setHotlists(data.data);
+          setPagination(prev => ({
+            ...prev,
+            total: data.data.length,
+            pages: Math.ceil(data.data.length / prev.limit)
+          }));
+        } else {
+          throw new Error(data.error || 'Failed to fetch hotlists');
+        }
+      } catch (error) {
+        console.error('Error fetching hotlists:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHotlists();
   }, [filters, sortBy, pagination.page]);
 
   const handleFiltersChange = (newFilters: any) => {
@@ -131,15 +62,7 @@ export default function HotlistPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleContact = (consultantId: string) => {
-    // Simulate contact action
-    alert('Contact functionality would be implemented here');
-  };
 
-  const handleDownloadResume = (resumeUrl: string) => {
-    // Simulate resume download
-    alert('Resume download functionality would be implemented here');
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -148,21 +71,21 @@ export default function HotlistPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Consultant Hotlist
+            Hotlist Jobs
           </h1>
           <p className="text-gray-600">
-            Discover qualified IT consultants available for C2C opportunities
+            Discover the latest job opportunities posted by recruiters
           </p>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Filters Sidebar */}
-          <div className="lg:w-80 flex-shrink-0">
+          {/* <div className="lg:w-80 flex-shrink-0">
             <SearchFilters 
               onFiltersChange={handleFiltersChange}
               type="consultants"
             />
-          </div>
+          </div> */}
 
           {/* Main Content */}
           <div className="flex-1">
@@ -171,7 +94,7 @@ export default function HotlistPage() {
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div className="flex items-center space-x-4">
                   <div className="text-sm text-gray-600">
-                    {loading ? 'Loading...' : `${pagination.total} consultants found`}
+                    {loading ? 'Loading...' : `${pagination.total} hotlist posts found`}
                   </div>
                   {Object.keys(filters).length > 0 && (
                     <Badge variant="secondary">
@@ -187,30 +110,8 @@ export default function HotlistPage() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="recent">Most Recent</SelectItem>
-                      <SelectItem value="rate">Highest Rate</SelectItem>
-                      <SelectItem value="experience">Most Experienced</SelectItem>
-                      <SelectItem value="availability">Available First</SelectItem>
                     </SelectContent>
                   </Select>
-                  
-                  <div className="flex rounded-md border">
-                    <Button
-                      variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                      size="sm"
-                      onClick={() => setViewMode('grid')}
-                      className="rounded-r-none"
-                    >
-                      <Grid className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant={viewMode === 'list' ? 'default' : 'ghost'}
-                      size="sm"
-                      onClick={() => setViewMode('list')}
-                      className="rounded-l-none"
-                    >
-                      <List className="h-4 w-4" />
-                    </Button>
-                  </div>
                 </div>
               </div>
             </div>
@@ -239,15 +140,15 @@ export default function HotlistPage() {
                   </Card>
                 ))}
               </div>
-            ) : consultants.length === 0 ? (
+            ) : hotlists.length === 0 ? (
               <Card className="text-center py-12">
                 <CardContent>
                   <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">
-                    No consultants found
+                    No hotlist posts found
                   </h3>
                   <p className="text-gray-600 mb-4">
-                    Try adjusting your search criteria or filters
+                    No job posts available at the moment. Please check back later
                   </p>
                   <Button onClick={() => setFilters({})}>
                     Clear All Filters
@@ -255,17 +156,12 @@ export default function HotlistPage() {
                 </CardContent>
               </Card>
             ) : (
-              <div className={
-                viewMode === 'grid' 
-                  ? 'grid md:grid-cols-2 xl:grid-cols-3 gap-6' 
-                  : 'space-y-4'
-              }>
-                {consultants.map((consultant: any) => (
-                  <ConsultantCard
-                    key={consultant._id}
-                    consultant={consultant}
-                    onContact={handleContact}
-                    onDownloadResume={handleDownloadResume}
+              <div className="space-y-4">
+                {hotlists.map((hotlist: any) => (
+                  <HotlistCard
+                    key={hotlist._id}
+                    hotlist={hotlist}
+                    onContact={(email) => window.location.href = `mailto:${email}`}
                   />
                 ))}
               </div>
