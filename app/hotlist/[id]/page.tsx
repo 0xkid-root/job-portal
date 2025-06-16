@@ -98,6 +98,19 @@ export default function HotlistDetailPage() {
         <Card>
           <CardHeader>
             <CardTitle className="text-2xl font-bold">{hotlist.title}</CardTitle>
+            {hotlist.screenshot && (
+              <div className="mt-4 rounded-lg overflow-hidden shadow-lg">
+                <img
+                  src={`/uploads/${hotlist.screenshot}`}
+                  alt="Hotlist Screenshot"
+                  className="w-full h-auto object-contain max-h-[500px]"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                  }}
+                />
+              </div>
+            )}
             <div className="text-sm text-gray-500">
               Posted on {new Date(hotlist.createdAt).toLocaleDateString()}
             </div>

@@ -28,10 +28,32 @@ export default function PostHotlistPage() {
     captcha: ''
   });
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setFormData(prev => ({ ...prev, screenshot: file }));
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        setError('Please upload an image file');
+        return;
+      }
+
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setError('Image size should be less than 5MB');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        // Validate base64 string size (roughly 4/3 of file size)
+        if (base64String.length > 7 * 1024 * 1024) { // ~7MB in base64
+          setError('Image size too large after conversion');
+          return;
+        }
+        setFormData(prev => ({ ...prev, screenshot: file }));
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -62,13 +84,31 @@ export default function PostHotlistPage() {
         formDataToSend.append('screenshot', formData.screenshot);
       }
 
+      let screenshotFileName = '';
+      if (formData.screenshot instanceof File) {
+        const uniqueId = Date.now();
+        screenshotFileName = `${uniqueId}_${formData.screenshot.name}`;
+        const formDataToSend = new FormData();
+        formDataToSend.append('file', formData.screenshot);
+        formDataToSend.append('filename', screenshotFileName);
+
+        const uploadResponse = await fetch('/api/upload', {
+          method: 'POST',
+          body: formDataToSend,
+        });
+
+        if (!uploadResponse.ok) {
+          throw new Error('Failed to upload image');
+        }
+      }
+
       const response = await fetch('/api/hotlist', {
         method: 'POST',
         body: JSON.stringify({
           title: formData.title,
           content: formData.content,
           recruiterEmail: formData.recruiterEmail,
-          screenshot: formData.screenshot ? formData.screenshot.name : null
+          screenshot: screenshotFileName
         }),
         headers: {
           'Content-Type': 'application/json',

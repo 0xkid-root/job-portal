@@ -19,6 +19,9 @@ interface HotlistCardProps {
 }
 
 export default function HotlistCard({ hotlist, onContact }: HotlistCardProps) {
+
+  console.log(hotlist.screenshot,"hotlist is here why you are fear");
+
   const router = useRouter();
 
   const handleCardClick = () => {
@@ -43,6 +46,19 @@ export default function HotlistCard({ hotlist, onContact }: HotlistCardProps) {
           dangerouslySetInnerHTML={{ __html: hotlist.content }}
         />
         
+        {hotlist.screenshot && (
+          <div className="relative aspect-[16/9] mb-4 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200">
+            <img
+              src={`/uploads/${hotlist.screenshot}`}
+              alt="Screenshot"
+              className="absolute inset-0 w-full h-full object-contain bg-gray-50"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+              }}
+            />
+          </div>
+        )}
         <div className="flex items-center justify-between">
           <div className="text-sm text-gray-600">
             {hotlist.recruiterEmail}
