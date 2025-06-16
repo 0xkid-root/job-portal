@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { 
   MapPin, 
   Clock, 
-  DollarSign, 
   Building2, 
   Eye,
   Bookmark,
@@ -24,16 +23,11 @@ interface JobCardProps {
     company: string;
     location: string;
     type: string;
-    rate: {
-      min: number;
-      max: number;
-      type: string;
-    };
     skills: string[];
-    remote: boolean;
-    urgent: boolean;
-    isPremium: boolean;
-    views: number;
+    remote?: boolean;
+    urgent?: boolean;
+    isPremium?: boolean;
+    views?: number;
     createdAt: string;
   };
   onSave?: (jobId: string) => void;
@@ -50,16 +44,7 @@ export default function JobCard({ job, onSave, saved }: JobCardProps) {
     }
   };
 
-  const formatRate = () => {
-    const { min, max, type } = job.rate;
-    const prefix = type === 'hourly' ? '$' : '$';
-    const suffix = type === 'hourly' ? '/hr' : type === 'annual' ? '/year' : `/${type}`;
-    
-    if (min === max) {
-      return `${prefix}${min.toLocaleString()}${suffix}`;
-    }
-    return `${prefix}${min.toLocaleString()} - ${prefix}${max.toLocaleString()}${suffix}`;
-  };
+
 
   return (
     <Card className="hover:shadow-lg transition-shadow duration-200 relative">
@@ -110,15 +95,6 @@ export default function JobCard({ job, onSave, saved }: JobCardProps) {
       </CardHeader>
       
       <CardContent className="pt-0">
-        <div className="flex items-center text-sm text-gray-600 mb-3">
-          <DollarSign className="h-4 w-4 mr-1" />
-          <span className="font-medium text-green-600">{formatRate()}</span>
-          <span className="mx-2">•</span>
-          <Badge variant="outline" className="text-xs">
-            {job.type.toUpperCase()}
-          </Badge>
-        </div>
-        
         <div className="flex flex-wrap gap-1 mb-4">
           {job.skills.slice(0, 4).map((skill, index) => (
             <Badge key={index} variant="secondary" className="text-xs">

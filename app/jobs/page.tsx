@@ -53,13 +53,19 @@ export default function JobsPage() {
       const queryParams = new URLSearchParams({
         page: pagination.page.toString(),
         limit: pagination.limit.toString(),
-        ...filters,
-        ...(sortBy === 'rate' && { sortBy: 'rate' }),
+        ...(filters.keyword && { search: filters.keyword }),
+        ...(filters.location && { location: filters.location }),
+        ...(filters.skills?.length > 0 && { skills: filters.skills.join(',') }),
+        ...(filters.remote && { remote: 'true' }),
+        ...(filters.urgent && { urgent: 'true' }),
+        ...(filters.type && { jobType: filters.type }),
         ...(sortBy === 'recent' && { sortBy: 'createdAt' })
       });
 
+      console.log('Fetching jobs with params:', queryParams.toString());
       const response = await fetch(`/api/jobs?${queryParams}`);
       const data = await response.json();
+      console.log('API Response:', data);
 
       if (data.success) {
         setJobs(data.data.jobs);

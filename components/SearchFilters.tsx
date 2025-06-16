@@ -25,7 +25,6 @@ export default function SearchFilters({ onFiltersChange, type }: SearchFiltersPr
     remote: false,
     urgent: false,
     jobType: '',
-    rateRange: [0, 200],
     availability: ''
   });
 
@@ -66,7 +65,6 @@ export default function SearchFilters({ onFiltersChange, type }: SearchFiltersPr
       remote: false,
       urgent: false,
       jobType: '',
-      rateRange: [0, 200],
       availability: ''
     };
     setFilters(clearedFilters);
@@ -194,17 +192,6 @@ export default function SearchFilters({ onFiltersChange, type }: SearchFiltersPr
               </Select>
             </div>
 
-            {/* Rate Range */}
-            <div className="space-y-2">
-              <Label>Hourly Rate Range: ${filters.rateRange[0]} - ${filters.rateRange[1]}</Label>
-              <Slider
-                value={filters.rateRange}
-                onValueChange={(value) => handleFilterChange('rateRange', value)}
-                max={200}
-                step={5}
-                className="w-full"
-              />
-            </div>
 
             {/* Job Type (for jobs) */}
             {type === 'jobs' && (

@@ -2,9 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
 import Job from '@/lib/models/Job';
 
-export async function GET(request: NextRequest) {
+export async function GET(request) {
   try {
+    console.log('Connecting to MongoDB...');
     await connectToDatabase();
+    console.log('MongoDB connected successfully');
     
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
@@ -15,11 +17,11 @@ export async function GET(request: NextRequest) {
     const remote = searchParams.get('remote') === 'true';
     const urgent = searchParams.get('urgent') === 'true';
     const jobType = searchParams.get('jobType') || '';
-    const minRate = parseInt(searchParams.get('minRate') || '0');
-    const maxRate = parseInt(searchParams.get('maxRate') || '999999');
+
+    console.log('Received search params:', { page, limit, search, location, skills, remote, urgent, jobType });
 
     // Build query
-    const query: any = {};
+    const query = {};
 
     if (search) {
       query.$or = [
@@ -48,17 +50,21 @@ export async function GET(request: NextRequest) {
       query.type = jobType;
     }
 
+    console.log('MongoDB query:', JSON.stringify(query, null, 2));
+
     const skip = (page - 1) * limit;
 
+    console.log('Executing MongoDB find operation...');
     const [jobs, total] = await Promise.all([
       Job.find(query)
-        .populate('postedBy', 'firstName lastName company')
+        .select('-__v')
         .sort({ isPremium: -1, createdAt: -1 })
         .skip(skip)
         .limit(limit)
         .lean(),
       Job.countDocuments(query)
     ]);
+    console.log(`Found ${total} jobs, returning ${jobs.length} jobs for current page`);
 
     return NextResponse.json({
       success: true,
@@ -76,13 +82,13 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Jobs fetch error:', error);
     return NextResponse.json(
-      { success: false, error: 'Internal server error' },
+      { success: false, error: error.message || 'Internal server error' },
       { status: 500 }
     );
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request) {
   try {
     await connectToDatabase();
     
@@ -94,7 +100,6 @@ export async function POST(request: NextRequest) {
       location,
       type,
       duration,
-      rate,
       skills,
       experience,
       requirements,
@@ -105,7 +110,7 @@ export async function POST(request: NextRequest) {
     } = body;
 
     // Validate required fields
-    if (!title || !description || !company || !location || !type || !rate || !skills || !experience || !contactEmail) {
+    if (!title || !description || !company || !location || !type || !skills || !experience || !contactEmail) {
       return NextResponse.json(
         { success: false, error: 'Missing required fields' },
         { status: 400 }
@@ -119,11 +124,10 @@ export async function POST(request: NextRequest) {
       location,
       type,
       duration,
-      rate,
       skills,
       experience,
-      requirements: requirements || [],
-      benefits: benefits || [],
+      requirements: requirements ? [requirements] : [],
+      benefits: benefits ? [benefits] : [],
       remote: remote || false,
       urgent: urgent || false,
       contactEmail

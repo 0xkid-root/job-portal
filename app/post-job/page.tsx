@@ -39,9 +39,6 @@ export default function PostJobPage() {
     description: '',
     requirements: '',
     benefits: '',
-    minRate: '',
-    maxRate: '',
-    rateType: 'hourly',
     skills: [] as string[],
     experience: '',
     remote: false,
@@ -97,13 +94,6 @@ export default function PostJobPage() {
     }
   
     try {
-      // Format rate data
-      const rate = {
-        min: formData.minRate ? parseInt(formData.minRate) : undefined,
-        max: formData.maxRate ? parseInt(formData.maxRate) : undefined,
-        type: formData.rateType
-      };
-  
       // Prepare API request body
       const jobData = {
         title: formData.title,
@@ -117,8 +107,7 @@ export default function PostJobPage() {
         benefits: formData.benefits,
         remote: formData.remote,
         urgent: formData.urgent,
-        contactEmail: formData.contactEmail,
-        rate
+        contactEmail: formData.contactEmail
       };
   
       const response = await fetch('/api/jobs', {
@@ -132,6 +121,7 @@ export default function PostJobPage() {
       console.log('API Response:', response);
   
       const result = await response.json();
+      console.log('API Response Body:', result);
   
       if (!response.ok) {
         throw new Error(result.error || 'Failed to post job');
@@ -290,53 +280,7 @@ export default function PostJobPage() {
             </CardContent>
           </Card>
 
-          {/* Compensation */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <DollarSign className="h-5 w-5 mr-2" />
-                Compensation
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid md:grid-cols-3 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="minRate">Min Rate</Label>
-                  <Input
-                    id="minRate"
-                    type="number"
-                    placeholder="80"
-                    value={formData.minRate}
-                    onChange={(e) => setFormData(prev => ({ ...prev, minRate: e.target.value }))}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="maxRate">Max Rate</Label>
-                  <Input
-                    id="maxRate"
-                    type="number"
-                    placeholder="120"
-                    value={formData.maxRate}
-                    onChange={(e) => setFormData(prev => ({ ...prev, maxRate: e.target.value }))}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="rateType">Rate Type</Label>
-                  <Select value={formData.rateType} onValueChange={(value) => setFormData(prev => ({ ...prev, rateType: value }))}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="hourly">Per Hour</SelectItem>
-                      <SelectItem value="daily">Per Day</SelectItem>
-                      <SelectItem value="monthly">Per Month</SelectItem>
-                      <SelectItem value="annual">Per Year</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+
 
           {/* Skills & Requirements */}
           <Card>

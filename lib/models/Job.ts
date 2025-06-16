@@ -7,11 +7,6 @@ export interface IJob extends Document {
   location: string;
   type: 'c2c' | 'contract' | 'full-time';
   duration?: string;
-  rate: {
-    min: number;
-    max: number;
-    type: 'hourly' | 'daily' | 'monthly' | 'annual';
-  };
   skills: string[];
   experience: string;
   requirements?: string[];
@@ -30,11 +25,6 @@ const JobSchema = new Schema<IJob>({
   location: { type: String, required: true },
   type: { type: String, enum: ['c2c', 'contract', 'full-time'], required: true },
   duration: String,
-  rate: {
-    min: { type: Number, required: true },
-    max: { type: Number, required: true },
-    type: { type: String, enum: ['hourly', 'daily', 'monthly', 'annual'], default: 'hourly' }
-  },
   skills: { type: [String], required: true },
   experience: { type: String, required: true },
   requirements: [String],
