@@ -101,7 +101,7 @@ export default function HotlistDetailPage() {
             {hotlist.screenshot && (
               <div className="mt-4 rounded-lg overflow-hidden shadow-lg">
                 <img
-                  src={`/uploads/${hotlist.screenshot}`}
+                  src={hotlist.screenshot}
                   alt="Hotlist Screenshot"
                   className="w-full h-auto object-contain max-h-[500px]"
                   onError={(e) => {

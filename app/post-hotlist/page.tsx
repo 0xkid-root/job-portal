@@ -9,7 +9,6 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import dynamic from 'next/dynamic';
-
 // Dynamically import the rich text editor to avoid SSR issues
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import 'react-quill/dist/quill.snow.css'; // Import Quill styles
@@ -76,29 +75,30 @@ export default function PostHotlistPage() {
     }
 
     try {
-      const formDataToSend = new FormData();
-      formDataToSend.append('title', formData.title);
-      formDataToSend.append('content', formData.content);
-      formDataToSend.append('recruiterEmail', formData.recruiterEmail);
-      if (formData.screenshot) {
-        formDataToSend.append('screenshot', formData.screenshot);
-      }
-
-      let screenshotFileName = '';
+      let screenshotUrl = '';
       if (formData.screenshot instanceof File) {
-        const uniqueId = Date.now();
-        screenshotFileName = `${uniqueId}_${formData.screenshot.name}`;
-        const formDataToSend = new FormData();
-        formDataToSend.append('file', formData.screenshot);
-        formDataToSend.append('filename', screenshotFileName);
+        try {
+          const uploadData = new FormData();
+          uploadData.append('file', formData.screenshot);
+          
+          const uploadResponse = await fetch('/api/upload', {
+            method: 'POST',
+            body: uploadData,
+          });
 
-        const uploadResponse = await fetch('/api/upload', {
-          method: 'POST',
-          body: formDataToSend,
-        });
-
-        if (!uploadResponse.ok) {
-          throw new Error('Failed to upload image');
+          console.log(uploadResponse,"image uplode in claudnary "); // Log the response detail
+          
+          if (!uploadResponse.ok) {
+            throw new Error('Failed to upload image');
+          }
+          
+          const { url } = await uploadResponse.json();
+          screenshotUrl = url;
+        } catch (error) {
+          console.error('Error uploading image:', error);
+          setError('Failed to upload image. Please try again.');
+          setIsLoading(false);
+          return;
         }
       }
 
@@ -108,17 +108,14 @@ export default function PostHotlistPage() {
           title: formData.title,
           content: formData.content,
           recruiterEmail: formData.recruiterEmail,
-          screenshot: screenshotFileName
+          screenshot: screenshotUrl
         }),
         headers: {
           'Content-Type': 'application/json',
         },
       });
 
-      console.log('Response is here:', response);
-
       const data = await response.json();
-      console.log(data,"data is here");
       
       if (!data.success) {
         throw new Error(data.error || 'Failed to post hotlist');

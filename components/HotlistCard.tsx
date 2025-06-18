@@ -49,7 +49,7 @@ export default function HotlistCard({ hotlist, onContact }: HotlistCardProps) {
         {hotlist.screenshot && (
           <div className="relative aspect-[16/9] mb-4 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200">
             <img
-              src={`/uploads/${hotlist.screenshot}`}
+              src={hotlist.screenshot}
               alt="Screenshot"
               className="absolute inset-0 w-full h-full object-contain bg-gray-50"
               onError={(e) => {
