@@ -12,7 +12,18 @@ import {
 } from 'lucide-react';
 import Logo from './Logo';
 
-export default function Navbar() {
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
+interface NavbarProps {
+  user: User | null;
+}
+
+export default function Navbar({ user }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (

@@ -12,8 +12,25 @@ export default function HotlistDetailPage() {
   const params = useParams();
   const [hotlist, setHotlist] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  interface User {
+    _id: string;
+    name: string;
+    email: string;
+    role: string;
+  }
+
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
+    // Check authentication
+    fetch('/api/auth/me')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setUser(data.data);
+        }
+      });
+
     const fetchHotlistDetail = async () => {
       try {
         setLoading(true);
@@ -40,7 +57,7 @@ export default function HotlistDetailPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navbar />
+        <Navbar user={user} />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-200 rounded w-3/4 mb-4"></div>
@@ -59,7 +76,7 @@ export default function HotlistDetailPage() {
   if (!hotlist) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navbar />
+        <Navbar user={user} />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <Card>
             <CardContent className="text-center py-12">
@@ -84,7 +101,7 @@ export default function HotlistDetailPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
+      <Navbar user={user} />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-6">
           <Link href="/hotlist">

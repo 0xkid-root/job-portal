@@ -16,7 +16,16 @@ export default function JobsPage() {
   const [user, setUser] = useState(null);
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState({});
+  interface JobFilters {
+    keyword?: string;
+    location?: string;
+    skills: string[];
+    remote?: boolean;
+    urgent?: boolean;
+    type?: string;
+  }
+
+  const [filters, setFilters] = useState<JobFilters>({ skills: [] });
   const [sortBy, setSortBy] = useState('recent');
   const [viewMode, setViewMode] = useState('grid');
   const [pagination, setPagination] = useState({
@@ -26,22 +35,21 @@ export default function JobsPage() {
     pages: 0
   });
 
-  useEffect(() => {
-    // Check authentication
-    fetch('/api/auth/me')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          setUser(data.data);
-        }
-      });
+// Initial search useEffect
+useEffect(() => {
+  fetch('/api/auth/me')
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        setUser(data.data);
+      }
+    });
 
-    // Set initial search from URL params
-    const initialSearch = searchParams.get('search');
-    if (initialSearch) {
-      setFilters({ keyword: initialSearch });
-    }
-  }, [searchParams]);
+  const initialSearch = searchParams.get('search');
+  if (initialSearch) {
+    setFilters({ keyword: initialSearch, skills: [] }); // Fixed
+  }
+}, [searchParams]);
 
   useEffect(() => {
     fetchJobs();
@@ -82,7 +90,7 @@ export default function JobsPage() {
     }
   };
 
-  const handleFiltersChange = (newFilters: any) => {
+  const handleFiltersChange = (newFilters: JobFilters) => {
     setFilters(newFilters);
     setPagination(prev => ({ ...prev, page: 1 }));
   };
@@ -208,7 +216,7 @@ export default function JobsPage() {
                   <p className="text-gray-600 mb-4">
                     Try adjusting your search criteria or filters
                   </p>
-                  <Button onClick={() => setFilters({})}>
+                  <Button onClick={() => setFilters({ skills: [] })}>
                     Clear All Filters
                   </Button>
                 </CardContent>

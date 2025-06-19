@@ -11,9 +11,31 @@ import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
 import { Search, X, Filter } from 'lucide-react';
 
+interface JobFilters {
+  keyword?: string;
+  location?: string;
+  skills: string[];
+  remote?: boolean;
+  urgent?: boolean;
+  type?: string;
+}
+
+interface ConsultantFilters {
+  keyword?: string;
+  location?: string;
+  skills: string[];
+  experience?: string;
+  availability?: string;
+}
+
+type FilterType = {
+  jobs: JobFilters;
+  consultants: ConsultantFilters;
+};
+
 interface SearchFiltersProps {
-  onFiltersChange: (filters: any) => void;
-  type: 'jobs' | 'consultants';
+  onFiltersChange: (filters: FilterType[keyof FilterType]) => void;
+  type: keyof FilterType;
 }
 
 export default function SearchFilters({ onFiltersChange, type }: SearchFiltersProps) {

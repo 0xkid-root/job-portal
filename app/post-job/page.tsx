@@ -142,7 +142,7 @@ export default function PostJobPage() {
   if (success) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navbar />
+        <Navbar user={null} />
         <div className="max-w-2xl mx-auto px-4 py-16">
           <Card className="text-center">
             <CardContent className="pt-8">
@@ -165,7 +165,7 @@ export default function PostJobPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
+      <Navbar user={null} />
       
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
